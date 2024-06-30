@@ -13,6 +13,12 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject pauseMenu;
 
+    [SerializeField]
+    private MovementHelper player;
+
+    [SerializeField]
+    private ShieldButtonHelper shieldButton;
+
     public void ReloadLevel()
     {
         fadeManager.FadeOut(LevelAppearingDuration);
@@ -49,6 +55,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        shieldButton.enabled = false;
         fadeManager.FadeIn(LevelAppearingDuration);
         StartCoroutine(GenerateLevel());
     }
@@ -56,5 +63,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator GenerateLevel()
     {
         yield return GetComponent<MazeGenerator>().GeneratLevel();
+        Instantiate(player, new Vector3(0, 0.25f, 0), Quaternion.identity);
+        shieldButton.enabled = true;
     }
 }

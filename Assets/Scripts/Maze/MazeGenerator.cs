@@ -25,8 +25,6 @@ public class MazeGenerator : MonoBehaviour
         yield return GenerateMaze();
 
         GetComponent<NavMeshSurface>().BuildNavMesh();
-
-        Instantiate(player, new Vector3(0, 0.25f, 0), Quaternion.identity);
     }
 
     private IEnumerator GenerateMaze()

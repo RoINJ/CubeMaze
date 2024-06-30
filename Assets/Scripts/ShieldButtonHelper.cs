@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -8,6 +9,9 @@ public class ShieldButtonHelper : MonoBehaviour, IPointerDownHandler, IPointerUp
     private const float shieldDuration = 2f;
 
     private Button shieldButton;
+
+    [SerializeField]
+    private Image cooldownImage;
 
     private PlayerShieldHelper PlayerShield => GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerShieldHelper>();
 
@@ -27,7 +31,7 @@ public class ShieldButtonHelper : MonoBehaviour, IPointerDownHandler, IPointerUp
         PlayerShield.DeactivateShield();
 
         shieldButton.interactable = false;
-        Invoke(nameof(EnableButton), shieldCooldown);
+        StartCoroutine(Cooldown(shieldCooldown));
     }
 
     private void Start()
@@ -40,8 +44,19 @@ public class ShieldButtonHelper : MonoBehaviour, IPointerDownHandler, IPointerUp
         PlayerShield.DeactivateShield();
     }
 
-    private void EnableButton()
+    private IEnumerator Cooldown(float duration)
     {
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            var fillAmount = Mathf.Lerp(1, 0, timer / duration);
+            cooldownImage.fillAmount = fillAmount;
+            yield return null;
+        }
+
+        cooldownImage.fillAmount = 0;
         shieldButton.interactable = true;
     }
 }
